@@ -1,0 +1,17 @@
+{
+    "name": "sql/composer-package",
+    "description": "The package is designed for the convenient work of building SQL-queries",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Vladislav Kholshchevnikov",
+            "email": "vladiksmart@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "sql\\": "src/"
+        }
+    }
+}
