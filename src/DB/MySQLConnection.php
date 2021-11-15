@@ -21,4 +21,13 @@ class MySQLConnection
         if ($this->connection)
             $this->connection = null;
     }
+
+    public function execute($query)
+    {
+        var_dump($query);
+        $stm = $this->connection->prepare($query);
+        $stm->execute();
+        $this->close();
+        return $stm->fetchAll();
+    }
 }

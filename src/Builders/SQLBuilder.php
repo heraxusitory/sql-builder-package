@@ -1,20 +1,18 @@
 <?php
 
-
-namespace sql;
-
+namespace sql\Builders;
 
 interface SQLBuilder
 {
-    public function select();
-    public function limit();
-    public function where();
+    public function select($table, $fields);
+    public function limit(int $start, int $offset);
+    public function where($field, $operator, $value);
     public function first();
-    public function find();
+    public function find($id);
 
     public function get();
 
-    public function offset();
+    public function offset($start);
     public function groupBy();
     public function delete();
     

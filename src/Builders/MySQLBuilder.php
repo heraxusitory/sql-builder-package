@@ -6,36 +6,58 @@ namespace sql\Builders;
 
 use sql\DB\DBConnection;
 use sql\DB\MySQLConnection;
-use sql\SQLBuilder;
+use sql\Builders\SQLBuilder;
 
 class MySQLBuilder implements SQLBuilder
 {
-    private ?MySQLConnection $connection;
+    private $connection = null;
     private $query = null;
+    private $table_name;
 
     public function __construct()
     {
-        $this->connection = new MySQLConnection();
+
     }
 
-    public function select()
+    public function getSql()
     {
-        // TODO: Implement select() method.
+        return $this->query;
     }
 
-    public function where()
+    public function reset()
     {
-        // TODO: Implement where() method.
+        $this->query = new \stdClass();
     }
 
-    public function limit()
+    public function select($table, $fields)
+    {
+        $this->reset();
+        $this->query->base = "SELECT {$fields} FROM {$table}";
+        $this->query->type = 'select';
+        return $this;
+    }
+
+    public function where($field, $operator, $value)
+    {
+        if(!in_array($this->query->type, ['select', 'update', 'delete', 'table']))
+            throw new \Exception('WHERE can only be added to SELECT, UPDATE OR DELETE');
+
+        $this->query->base .= " WHERE {$field} $operator '{$value}'";
+
+        return $this;
+    }
+
+    public function limit($start, $offset)
     {
         // TODO: Implement limit() method.
     }
 
     public function first()
     {
-        // TODO: Implement first() method.
+        if(!in_array($this->query->type, ['select']))
+            throw new \Exception('FIRST can only be added to SELECT');
+        $this->query->base .= " LIMIT 1";
+        return $this->execute();
     }
 
     public function get()
@@ -48,18 +70,40 @@ class MySQLBuilder implements SQLBuilder
         // TODO: Implement groupBy() method.
     }
 
-    public function find()
+    public function find($id)
     {
-        // TODO: Implement find() method.
+        if(!in_array($this->query->type, ['select']))
+            throw new \Exception('FIND can only be added to SELECT');
+        $this->query->base .= " WHERE id='{$id}'";
+        return $this->execute();
     }
 
-    public function offset()
+    public function offset($start)
     {
         // TODO: Implement offset() method.
     }
 
+    public function table($table)
+    {
+        $this->reset();
+        $this->query->type = 'table';
+        $this->table_name = $table;
+
+        return $this;
+    }
+
     public function delete()
     {
-        // TODO: Implement delete() method.
+        if (!in_array($this->query->type, ['table']))
+            throw new \Exception('Syntax error when trying to delete a record');
+        $this->query->base = "DELETE FROM {$this->table_name} " . $this->query->base;
+        var_dump($this->query->base);
+//        exit();
+        return $this->execute();
+    }
+
+    public function execute()
+    {
+        return (new MySQLConnection())->execute($this->query->base);
     }
 }
