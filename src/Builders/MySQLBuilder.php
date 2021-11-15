@@ -4,13 +4,10 @@
 namespace sql\Builders;
 
 
-use sql\DB\DBConnection;
 use sql\DB\MySQLConnection;
-use sql\Builders\SQLBuilder;
 
 class MySQLBuilder implements SQLBuilder
 {
-    private $connection = null;
     private $query = null;
     private $table_name;
 
@@ -39,7 +36,7 @@ class MySQLBuilder implements SQLBuilder
 
     public function where($field, $operator, $value)
     {
-        if(!in_array($this->query->type, ['select', 'update', 'delete', 'table']))
+        if (!in_array($this->query->type, ['select', 'update', 'delete', 'table']))
             throw new \Exception('WHERE can only be added to SELECT, UPDATE OR DELETE');
 
         $this->query->base .= " WHERE {$field} $operator '{$value}'";
@@ -47,14 +44,16 @@ class MySQLBuilder implements SQLBuilder
         return $this;
     }
 
-    public function limit($start, $offset)
+    public function limit($start, $offset = 0)
     {
-        // TODO: Implement limit() method.
+        $this->query->base .= ' LIMIT ' . $start . ' OFFSET ' . $offset;
+
+        return $this;
     }
 
     public function first()
     {
-        if(!in_array($this->query->type, ['select']))
+        if (!in_array($this->query->type, ['select']))
             throw new \Exception('FIRST can only be added to SELECT');
         $this->query->base .= " LIMIT 1";
         return $this->execute();
@@ -62,7 +61,9 @@ class MySQLBuilder implements SQLBuilder
 
     public function get()
     {
-        // TODO: Implement get() method.
+        if (!in_array($this->query->type, ['select']))
+            throw new \Exception('GET can only be added to SELECT');
+        return $this->execute();
     }
 
     public function groupBy()
@@ -72,7 +73,7 @@ class MySQLBuilder implements SQLBuilder
 
     public function find($id)
     {
-        if(!in_array($this->query->type, ['select']))
+        if (!in_array($this->query->type, ['select']))
             throw new \Exception('FIND can only be added to SELECT');
         $this->query->base .= " WHERE id='{$id}'";
         return $this->execute();
@@ -97,8 +98,6 @@ class MySQLBuilder implements SQLBuilder
         if (!in_array($this->query->type, ['table']))
             throw new \Exception('Syntax error when trying to delete a record');
         $this->query->base = "DELETE FROM {$this->table_name} " . $this->query->base;
-        var_dump($this->query->base);
-//        exit();
         return $this->execute();
     }
 
