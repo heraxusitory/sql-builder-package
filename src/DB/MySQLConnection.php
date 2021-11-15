@@ -24,7 +24,6 @@ class MySQLConnection
 
     public function execute($query)
     {
-        var_dump($query);
         $stm = $this->connection->prepare($query);
         $stm->execute();
         $this->close();
