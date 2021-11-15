@@ -13,5 +13,8 @@
         "psr-4": {
             "sql\\": "src/"
         }
+    },
+    "require": {
+        "ext-pdo": "*"
     }
 }
