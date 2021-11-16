@@ -1,7 +1,7 @@
 <?php
 
 
-namespace sql\DB;
+namespace SQL\Builder\DB;
 
 
 use PDO;

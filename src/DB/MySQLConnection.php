@@ -1,7 +1,8 @@
 <?php
 
 
-namespace sql\DB;
+namespace SQL\Builder\DB;
+
 
 
 class MySQLConnection

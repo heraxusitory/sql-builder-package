@@ -1,6 +1,6 @@
 <?php
 
-use sql\Builders\MySQLBuilder;
+use SQL\Builder\Builders\MySQLBuilder;
 
 require_once '../vendor/autoload.php';
 

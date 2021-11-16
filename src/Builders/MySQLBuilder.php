@@ -1,10 +1,11 @@
 <?php
 
 
-namespace sql\Builders;
+namespace SQL\Builder\Builders;
 
 
-use sql\DB\MySQLConnection;
+use SQL\Builder\Builders\SQLBuilder;
+use SQL\Builder\DB\MySQLConnection;
 
 class MySQLBuilder implements SQLBuilder
 {
@@ -24,7 +25,6 @@ class MySQLBuilder implements SQLBuilder
     private function reset()
     {
         $this->query = new \stdClass();
-        printCust($this->query->base);
         $this->wheres = [];
         $this->table_name = null;
     }
@@ -33,7 +33,6 @@ class MySQLBuilder implements SQLBuilder
     {
         $this->reset();
         $this->query->base = "SELECT {$fields} FROM {$table}";
-        printCust($this->query->base);
         $this->query->type = 'select';
 
         return $this;
@@ -45,8 +44,6 @@ class MySQLBuilder implements SQLBuilder
             throw new \Exception('WHERE can only be added to SELECT, UPDATE OR DELETE');
 
         $this->wheres[] = " $field " . " $operator " . " $value ";
-//        $this->query->base .= " WHERE {$field} $operator '{$value}'";
-        printCust($this->query->base);
 
         return $this;
     }
@@ -67,7 +64,6 @@ class MySQLBuilder implements SQLBuilder
             $this->query->base = "SELECT * FROM {$this->table_name }";
         $this->query->base .= $this->addWheres();
         $this->limit(1);
-//        $this->query->base .= " LIMIT 1";
         printCust($this->query->base);
         return $this->execute();
     }

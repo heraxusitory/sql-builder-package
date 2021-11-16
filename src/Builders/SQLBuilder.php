@@ -1,6 +1,6 @@
 <?php
 
-namespace sql\Builders;
+namespace SQL\Builder\Builders;
 
 interface SQLBuilder
 {
